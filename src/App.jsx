@@ -13,7 +13,7 @@ function App() {
   let content
 
   if (projectsState.selectedProjectId === null) {
-    content = <NewProject onAdd={handleAddProject} />
+    content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject} />
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />
   }
@@ -27,9 +27,19 @@ function App() {
     })
   }
 
+  function handleCancelAddProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+      }
+    })
+  }
+
   function handleAddProject(projectData) {
     setProjectsState((prevState) => {
-      const newId = Math.random()   // 같은 숫자가 두 번 이상 나올 수 있기 때문에 완벽하지는 않지만 연습 단계에서는 일단 사용
+      // 같은 숫자가 두 번 이상 나올 수 있기 때문에 완벽하지는 않지만 연습 단계에서는 일단 사용
+      const newId = Math.random()
       const newProject = {
         ...projectData,
         id: newId,
@@ -45,7 +55,10 @@ function App() {
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectSidebar onStartAddProject={handleStartAddProject} projects={projectsState.projects} />
+      <ProjectSidebar
+        onStartAddProject={handleStartAddProject}
+        projects={projectsState.projects}
+      />
       {content}
     </main>
   );
